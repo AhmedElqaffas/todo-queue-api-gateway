@@ -1,0 +1,29 @@
+{
+    "$schema": "https://www.krakend.io/schema/v2.9/krakend.json",
+    "port": 8000,
+    "version": 3,
+    "plugin": {
+        "pattern": ".so",
+        "folder": "/usr/local/krakend/plugins/"
+    },
+    "endpoints": [
+        {
+            "endpoint": "/todo/all",
+            "input_headers": ["Todo-User-Email"],
+             "backend": [
+                {
+                    "url_pattern": "/api/AzureWebAdapter/todo/all",
+                    "host": [
+                        "{{ env "BACKEND_URL" }}"
+                    ],
+                    "is_collection": true
+                }
+            ]
+        }
+    ],
+    "extra_config": {
+        "plugin/http-server": {
+            "name": ["krakend-cognito-jwt"]
+        }
+    }
+}

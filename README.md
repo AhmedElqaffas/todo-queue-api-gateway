@@ -11,10 +11,10 @@ cd <repo_directory>
 docker build -t krakend-gateway .
 ```
 
-Then run the container, replace `http://localhost:8080` with the url of the spring backend:
+Then run the container, run the following command, replace `backend_url`, `user_pool_id`, `client_id` and `redirect_url` with their actual values:
 
 ```
-docker run -p 8000:8000 -e FC_ENABLE=1 -e BACKEND_URL=<URL> krakend-gateway
+docker run -p 8000:8000 -e FC_ENABLE=1 -e BACKEND_URL=<backend_url> -e COGNITO_URL="https://<user_pool_id>.amazoncognito.com/login?client_id=<client_id>&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone&redirect_uri=<redirect_url>" krakend-gateway
 ```
 
 # JWT Verification Plugin

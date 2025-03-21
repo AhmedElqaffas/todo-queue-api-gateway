@@ -33,10 +33,10 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 
 	// Return the custom handler
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		
 		config, _ := extra[pluginName].(map[string]interface{})
 	
 		pathsInterface, _ := config["applicable-endpoints"].([]interface{})
+		loginUrl, _ := config["login-url"].(string)
 		
 		var applicableEndpoints []string
 		for _, path := range pathsInterface {
@@ -58,6 +58,9 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 		token := extractToken(req)
 		if token == "" {
 			logger.Error("Unauthorized: Missing token")
+			// add the login URL to the response headers
+			w.Header().Set("Access-Control-Expose-Headers", "login-url")
+			w.Header().Set("login-url", loginUrl)
 			http.Error(w, "Unauthorized: Missing token", http.StatusUnauthorized)
 			return
 		}
@@ -66,11 +69,17 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 		valid, err := validateCognitoJWT(token)
 		if err != nil {
 			logger.Error(fmt.Sprintf("Error validating token: %v", err))
+			// add the login URL to the response headers
+			w.Header().Set("Access-Control-Expose-Headers", "login-url")
+			w.Header().Set("login-url", loginUrl)
 			http.Error(w, "Unauthorized: Invalid token", http.StatusUnauthorized)
 			return
 		}
 
 		if !valid {
+			// add the login URL to the response headers
+			w.Header().Set("Access-Control-Expose-Headers", "login-url")
+			w.Header().Set("login-url", loginUrl)
 			http.Error(w, "Unauthorized: Invalid token", http.StatusUnauthorized)
 			return
 		}

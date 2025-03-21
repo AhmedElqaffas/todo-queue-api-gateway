@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strings"
+	"strings"	
+	"slices"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -32,9 +33,31 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 
 	// Return the custom handler
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		
+		config, _ := extra[pluginName].(map[string]interface{})
+	
+		pathsInterface, _ := config["applicable-endpoints"].([]interface{})
+		
+		var applicableEndpoints []string
+		for _, path := range pathsInterface {
+			endpoint, ok := path.(string)
+			if !ok {
+				logger.Error("An element in 'applicable-endpoints' is not a string")
+				return
+			}
+			applicableEndpoints  = append(applicableEndpoints, endpoint)
+		}
+		
+		if !slices.Contains(applicableEndpoints, req.URL.Path) {
+			h.ServeHTTP(w, req)
+			return
+		}
+		
+
 		// Extract the JWT token from the Authorization header
 		token := extractToken(req)
 		if token == "" {
+			logger.Error("Unauthorized: Missing token")
 			http.Error(w, "Unauthorized: Missing token", http.StatusUnauthorized)
 			return
 		}

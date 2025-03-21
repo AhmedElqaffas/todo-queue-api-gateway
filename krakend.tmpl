@@ -19,16 +19,36 @@
                     "is_collection": true
                 }
             ]
+        },
+        {
+            "endpoint": "/auth/token",
+            "output_encoding": "no-op",
+            "input_query_strings": ["code"],
+            "backend": [
+                {
+                    "url_pattern": "/api/AzureWebAdapter/auth/token",
+                    "host": [
+                        "{{ env "BACKEND_URL" }}"
+                    ]
+                }
+            ]
         }
     ],
     "extra_config": {
         "plugin/http-server": {
-            "name": ["krakend-cognito-jwt"]
+            "name": ["krakend-cognito-jwt"],
+            "krakend-cognito-jwt": {
+                "applicable-endpoints": [
+                    "/todo/all",
+                    "/todo/new",
+                    "/todo/remove"
+                ]
+            }
         },
-"security/cors": {
-      "allow_origins": [
-        "*"
-      ]
-    }
+        "security/cors": {
+            "allow_origins": [
+                "*"
+            ]
+        }
     }
 }

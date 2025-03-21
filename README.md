@@ -14,7 +14,7 @@ docker build -t krakend-gateway .
 Then run the container, replace `http://localhost:8080` with the url of the spring backend:
 
 ```
-docker run -p 8000:8000 -e FC_ENABLE=1 -e BACKEND_URL=http://localhost:8080 krakend-gateway
+docker run -p 8000:8000 -e FC_ENABLE=1 -e BACKEND_URL=<URL> krakend-gateway
 ```
 
 # JWT Verification Plugin

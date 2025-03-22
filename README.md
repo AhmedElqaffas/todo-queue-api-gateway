@@ -42,3 +42,6 @@ docker rm plugin-builder
 
 The output `.so` file is already committed in this repo so that we can build the krakend image directly, without having to build the plugin first.
 
+# Online Hosting
+
+This gateway is hosted as a docker container on [Render](https://www.render.com).

@@ -23,7 +23,7 @@
         {
             "endpoint": "/todo/new",
             "method": "POST",
-            "input_headers": ["Todo-User-Email"],
+            "input_headers": ["Todo-User-Email", "Content-Type"],
              "backend": [
                 {
                     "url_pattern": "/api/AzureWebAdapter/todo/new",
@@ -36,7 +36,8 @@
         {
             "endpoint": "/todo/remove",
             "method": "POST",
-            "input_headers": ["Todo-User-Email"],
+            "output_encoding": "no-op",
+            "input_headers": ["Todo-User-Email", "Content-Type"],
              "backend": [
                 {
                     "url_pattern": "/api/AzureWebAdapter/todo/remove",

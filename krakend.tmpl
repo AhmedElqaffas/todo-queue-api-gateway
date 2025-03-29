@@ -21,6 +21,30 @@
             ]
         },
         {
+            "endpoint": "/todo/new",
+            "input_headers": ["Todo-User-Email"],
+             "backend": [
+                {
+                    "url_pattern": "/api/AzureWebAdapter/todo/new",
+                    "host": [
+                        "{{ env "BACKEND_URL" }}"
+                    ]
+                }
+            ]
+        },
+        {
+            "endpoint": "/todo/remove",
+            "input_headers": ["Todo-User-Email"],
+             "backend": [
+                {
+                    "url_pattern": "/api/AzureWebAdapter/todo/remove",
+                    "host": [
+                        "{{ env "BACKEND_URL" }}"
+                    ]
+                }
+            ]
+        },
+        {
             "endpoint": "/auth/token",
             "output_encoding": "no-op",
             "input_query_strings": ["code"],
